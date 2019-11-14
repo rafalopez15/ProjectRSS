@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h2 align="center">{% block title %}RSS Feeds{% endblock %}</h2>
+{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <form method="post">
+            <fieldset>
+                <div class="form-group">
+                    <label class="col-form-label col-form-label-sm" for="rssname">RSS Name</label>
+                    <input class="form-control form-control-sm" name="rssname" id="rssname" placeholder="RSS Name">
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label col-form-label-sm" for="url">RSS URL</label>
+                    <input class="form-control form-control-sm" name="rssurl" id="rssurl" placeholder="URL">
+                </div>
+                    <button type="submit" class="btn btn-primary">Add</button> 
+                </div>
+            </fieldset>
+        </form>
+    <div class="jumbotron">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Company</th>
+                    <th scope="col">Last Update</th>
+                    <th scope='col'></th>
+                </tr>
+            </thead>
+            {% for feed in feeds %}
+            <tbody>
+                <tr>
+                    <td><a href="{{ feed['rssurl'] }}">{{ feed['rssname'] }}</a></td>
+                    {% if feed['rssdate'] == '' %}
+                        <td>NA</td>
+                    {% else %}
+                        <td>{{ feed['rssdate'] }}</td>
+                    {% endif %}
+                    <td scope="col"><a class="btn btn-danger btn-sm" role="button">Delete</a></td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table> 
+    </div>
+{% endblock %}

@@ -1,11 +1,8 @@
 {% extends 'base.html' %}
 
-{% block header %}
-  <h2 align="center">{% block title %}RSS Feeds{% endblock %}</h2>
-{% endblock %}
-
 {% block content %}
     <div class="jumbotron">
+        <h2 align="center">Add a feed</h2>
         <form method="post">
             <fieldset>
                 <div class="form-group">
@@ -20,9 +17,11 @@
                 </div>
             </fieldset>
         </form>
+    </div>
+    <h2 align="center"> RSS Feeds </h2>
     <div class="jumbotron">
         <table class="table">
-            <thead>
+            <thead class="thead-dark">
                 <tr>
                     <th scope="col">Company</th>
                     <th scope="col">Last Update</th>
@@ -32,13 +31,17 @@
             {% for feed in feeds %}
             <tbody>
                 <tr>
-                    <td><a href="{{ feed['rssurl'] }}">{{ feed['rssname'] }}</a></td>
-                    {% if feed['rssdate'] == '' %}
+                    <td><a href="{{ feed.rssurl }}">{{ feed.rssname }}</a></td>
+                    {% if feed.rssdate == '' %}
                         <td>NA</td>
                     {% else %}
-                        <td>{{ feed['rssdate'] }}</td>
+                        <td>{{ feed.rssdate }}</td>
                     {% endif %}
-                    <td scope="col"><a class="btn btn-danger btn-sm" role="button">Delete</a></td>
+                    <td scope="col">
+                        <form action="{{ url_for('feed.delete', rssname=feed.rssname) }}" method="post">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             </tbody>
             {% endfor %}

@@ -2,7 +2,6 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from werkzeug.exceptions import abort
-from datetime import datetime
 import requests
 import math
 import os
@@ -51,6 +50,27 @@ def add_rss_feed():
         flash(error)
     
     return render_template('feed/index.html')
+
+
+def get_rss(rssname):
+    rss = get_db().execute(
+        'SELECT rssname FROM rss WHERE rssname = ?',
+        (rssname,)
+    ).fetchone()
+
+    if rss is None:
+        abort(404, 'RSS feed for {} not found.'.format(rss))
+    
+    return rss
+
+
+@bp.route('/<rssname>', methods=('POST',))
+def delete(rssname):
+    get_rss(rssname)
+    db = get_db()
+    db.execute('DELETE FROM rss WHERE rssname = ?', (rssname,))
+    db.commit()
+    return redirect(url_for('index'))
 
 
 # Function to get RSS Feed in XML via HTTP request.

@@ -1,14 +1,14 @@
 import os
 
 from flask import Flask
+from flask_pymongo import PyMongo
+
+mongo = PyMongo()
 
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
-    )
+    app.config["MONGO_URI"] = "mongodb://localhost:27017/ProjectRss"
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -23,8 +23,7 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    from . import db
-    db.init_app(app)
+    mongo.init_app(app)
 
     from . import feed
     app.register_blueprint(feed.bp)
